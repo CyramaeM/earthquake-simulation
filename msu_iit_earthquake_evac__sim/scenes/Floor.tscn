@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://cf0pg6ruphwk0"]
+
+[ext_resource type="Script" uid="uid://b65prylkwpuhb" path="res://scripts/Floor.gd" id="1_dmu3r"]
+
+[node name="Floor" type="Node2D" unique_id=1584161637]
+script = ExtResource("1_dmu3r")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1331275016]
+position = Vector2(150.99998, -10.999999)
+scale = Vector2(0.8, 0.8)
+
+[node name="NavigationRegion2D" type="NavigationRegion2D" parent="." unique_id=435981806]
+
+[node name="Exits" type="Node2D" parent="." unique_id=1814494962 groups=["exits"]]
+
+[node name="StairConnectors" type="Node2D" parent="." unique_id=1737691285]
+
+[node name="WanderPoints" type="Node2D" parent="." unique_id=715812298]
+
+[node name="Agents" type="Node2D" parent="." unique_id=1262910809 groups=["agents"]]

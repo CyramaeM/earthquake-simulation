@@ -1,0 +1,75 @@
+[gd_scene format=3 uid="uid://g34u0nva7wpr"]
+
+[ext_resource type="Script" uid="uid://8upnnxy8wpjy" path="res://scripts/HeatMap.gd" id="1_elqb8"]
+[ext_resource type="Script" uid="uid://b3a0rk35ooday" path="res://scripts/CriticalPointsOverlay.gd" id="1_nxtc6"]
+[ext_resource type="PackedScene" uid="uid://cgt72qhg3m6lb" path="res://scenes/CSM_0.tscn" id="3_vcsgt"]
+[ext_resource type="PackedScene" uid="uid://s1rgscvmmpss" path="res://scenes/CSM_1.tscn" id="4_c01mt"]
+[ext_resource type="PackedScene" uid="uid://c0wftivgf7f2o" path="res://scenes/CSM_2.tscn" id="5_nxtc6"]
+[ext_resource type="Script" uid="uid://dwgnxehlj8xhe" path="res://scripts/SimDashboard.gd" id="7_nxtc6"]
+
+[sub_resource type="GDScript" id="GDScript_jlsqs"]
+script/source = "extends Node2D
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	if Manager.simulation_running:
+		queue_redraw()
+func _draw() -> void:
+	var cell_size = Manager.cell_size
+	
+	for cell in Manager.live_density.keys():
+		var  density = Manager.live_density[cell]
+		# Ignore empty areas
+		if density < 1.0:
+			continue
+		var color := Color.TRANSPARENT
+# Define what the colors mean based on agent density
+		if density < 3.0:
+			color = Color(0, 1, 0, 0.3) # Green: Low Density / Smooth Flow
+		elif density < 6.0:
+			color = Color(1, 1, 0, 0.4) # Yellow: Medium / Slowing Down
+		else:
+			color = Color(1, 0, 0, 0.5) # Red: Critical Bottleneck
+
+		# Draw the colored rectangle over that exact cell on the map
+		var rect = Rect2(cell.x * cell_size, cell.y * cell_size, cell_size, cell_size)
+		draw_rect(rect, color)
+		
+"
+
+[node name="Main" type="Node2D" unique_id=455772813]
+
+[node name="CriticalPointsOverlay" type="Node2D" parent="." unique_id=1139237629]
+script = ExtResource("1_nxtc6")
+metadata/_custom_type_script = "uid://b3a0rk35ooday"
+
+[node name="Node2D" type="Node2D" parent="." unique_id=1819971397]
+script = ExtResource("1_nxtc6")
+
+[node name="Floors" type="Node2D" parent="." unique_id=1402324463]
+
+[node name="Floor" parent="." unique_id=1584161637 instance=ExtResource("3_vcsgt")]
+position = Vector2(391, 11)
+
+[node name="Floor2" parent="." unique_id=295925065 instance=ExtResource("4_c01mt")]
+position = Vector2(1959, 7)
+floor_index = 1
+base_occupancy = 30
+
+[node name="Floor3" parent="." unique_id=2026169116 instance=ExtResource("5_nxtc6")]
+position = Vector2(1162, 1047)
+floor_index = 2
+
+[node name="HeatMapCanvas" type="Node2D" parent="." unique_id=414072212]
+script = ExtResource("1_elqb8")
+
+[node name="heatmapoverlay" type="Node2D" parent="." unique_id=1641008946]
+script = SubResource("GDScript_jlsqs")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1676030965]
+position = Vector2(1921, 1078)
+zoom = Vector2(0.5, 0.5)
+
+[node name="SimDashboard" type="CanvasLayer" parent="." unique_id=1489747435]
+script = ExtResource("7_nxtc6")
+metadata/_custom_type_script = "uid://dwgnxehlj8xhe"

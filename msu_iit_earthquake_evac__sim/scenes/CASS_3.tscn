@@ -1,0 +1,46 @@
+[gd_scene format=3 uid="uid://bhyjm2dibpv8j"]
+
+[ext_resource type="PackedScene" uid="uid://cf0pg6ruphwk0" path="res://scenes/Floor.tscn" id="1_tfl0n"]
+[ext_resource type="Texture2D" uid="uid://v0ohq4lneb7l" path="res://assets/CASS bldg-4.jpg" id="2_omu25"]
+[ext_resource type="Script" uid="uid://d0dhfmuo46owj" path="res://scripts/StairConnector.gd" id="3_8ddvi"]
+
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_8ddvi"]
+vertices = PackedVector2Array(1331.2578, 549.84375, 1339.1406, 570.3203, 1283.1797, 592.8828, 1280.4375, 580.0703, 1298.6094, 561.96875, 1274.1172, 563.1406, 1242.9609, 578.89844, 1245.9609, 823.96875, 1149, 823.02344, 1149, 647.0703, 1240, 558.97656, 1240, 538, 1273.1172, 538, 1109.0313, 646.0703, 1109.9609, 559.96875)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3, 4), PackedInt32Array(5, 4, 3, 6), PackedInt32Array(6, 7, 8, 9, 10), PackedInt32Array(10, 11, 12, 5, 6), PackedInt32Array(9, 13, 14, 10)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(1333, 546, 1298, 559, 1277, 560, 1276, 535, 1237, 535, 1237, 556, 1107, 557, 1106, 649, 1146, 650, 1146, 826, 1249, 827, 1246, 582, 1278, 583, 1281, 597, 1343, 572)])
+agent_radius = 3.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_omu25"]
+size = Vector2(28, 14)
+
+[node name="Floor" unique_id=1584161637 instance=ExtResource("1_tfl0n")]
+floor_index = 3
+
+[node name="Sprite2D" parent="." index="0" unique_id=1331275016]
+position = Vector2(966.99994, 540.99994)
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("2_omu25")
+
+[node name="NavigationRegion2D" parent="." index="1" unique_id=435981806]
+navigation_polygon = SubResource("NavigationPolygon_8ddvi")
+
+[node name="Stair_3_1" type="Area2D" parent="StairConnectors" parent_id_path=PackedInt32Array(1737691285) index="0" unique_id=120462148]
+script = ExtResource("3_8ddvi")
+destination_floor = 2
+destination_marker_name = "Stair_3_1"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StairConnectors/Stair_3_1" index="0" unique_id=1433884029]
+position = Vector2(1257, 548)
+shape = SubResource("RectangleShape2D_omu25")
+
+[node name="WP_1" type="Marker2D" parent="WanderPoints" parent_id_path=PackedInt32Array(715812298) index="0" unique_id=1831249333]
+position = Vector2(1198, 793)
+
+[node name="WP_2" type="Marker2D" parent="WanderPoints" parent_id_path=PackedInt32Array(715812298) index="1" unique_id=631025389]
+position = Vector2(1313, 571)
+
+[node name="WP_3" type="Marker2D" parent="WanderPoints" parent_id_path=PackedInt32Array(715812298) index="2" unique_id=489358957]
+position = Vector2(1140, 597)
+
+[node name="Stair_2_3" type="Marker2D" parent="WanderPoints" parent_id_path=PackedInt32Array(715812298) index="3" unique_id=1057664203]
+position = Vector2(1258, 567)

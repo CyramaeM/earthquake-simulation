@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://61sgea2w0xu2"]
+
+[ext_resource type="Script" uid="uid://bo1fmss7nbdvc" path="res://scripts/Agent.gd" id="1_kuxo3"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_kuxo3"]
+size = Vector2(10, 10)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_4kyhr"]
+radius = 3.0
+
+[node name="Agent" type="Node2D" unique_id=1501525786 groups=["agents"]]
+script = ExtResource("1_kuxo3")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=967431351]
+position = Vector2(1.1920929e-07, 1.1920929e-07)
+scale = Vector2(0.59999996, 0.59999996)
+texture = SubResource("PlaceholderTexture2D_kuxo3")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=1664882337]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1664882338]
+shape = SubResource("CircleShape2D_4kyhr")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=1122590361]

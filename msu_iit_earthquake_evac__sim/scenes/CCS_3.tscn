@@ -1,0 +1,78 @@
+[gd_scene format=3 uid="uid://bqqdya3v0rsii"]
+
+[ext_resource type="PackedScene" uid="uid://cf0pg6ruphwk0" path="res://scenes/Floor.tscn" id="1_j27vj"]
+[ext_resource type="Texture2D" uid="uid://d02hy57knngh8" path="res://assets/CCS floor plan_page-0004.jpg" id="2_w7rrg"]
+[ext_resource type="Script" uid="uid://d0dhfmuo46owj" path="res://scripts/StairConnector.gd" id="3_w7rrg"]
+
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_rgy3k"]
+vertices = PackedVector2Array(347.60938, 529.9922, 320.95313, 518.5703, 307.79688, 500, 328, 500, 346, 501, 1474, 499, 1497.9219, 499, 1489.8281, 513.7031, 1457.3281, 528.9922, 862.02344, 499, 861.02344, 356, 876, 356, 876, 452, 952, 500, 952, 385, 1408.0234, 385.9922, 1409.0313, 500.14063, 886, 452, 886, 411, 910, 411, 910, 454, 940, 454, 940, 500, 896.1094, 543.8125, 859.5781, 529, 1457.9297, 497.8672, 1458.9219, 460, 1474, 460, 945.53125, 528, 328, 458, 346, 458, 394.96875, 385.97656, 850.02344, 384.0078, 851.03125, 499, 393.96875, 501)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3, 4), PackedInt32Array(5, 6, 7, 8), PackedInt32Array(9, 10, 11, 12), PackedInt32Array(13, 14, 15, 16), PackedInt32Array(17, 18, 19, 20), PackedInt32Array(20, 21, 22, 23, 24, 9), PackedInt32Array(25, 26, 27, 5, 8), PackedInt32Array(16, 25, 8, 28), PackedInt32Array(13, 16, 28, 22), PackedInt32Array(3, 29, 30, 4), PackedInt32Array(31, 32, 33, 34), PackedInt32Array(0, 4, 34, 24), PackedInt32Array(24, 34, 33, 9), PackedInt32Array(22, 28, 23), PackedInt32Array(20, 9, 12, 17)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(392, 383, 391, 498, 349, 498, 349, 455, 325, 455, 325, 497, 302, 497, 319, 521, 347, 533, 859, 532, 896, 547, 946, 531, 1458, 532, 1492, 516, 1503, 496, 1477, 496, 1477, 457, 1456, 457, 1455, 495, 1412, 497, 1411, 383, 949, 382, 949, 497, 943, 497, 943, 451, 913, 451, 913, 408, 883, 408, 883, 449, 879, 449, 879, 353, 858, 353, 859, 496, 854, 496, 853, 381)])
+agent_radius = 3.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rgy3k"]
+size = Vector2(18.5, 31)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_w7rrg"]
+size = Vector2(12.25, 31)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_r27x7"]
+size = Vector2(12.25, 29.5)
+
+[node name="Floor" unique_id=1584161637 instance=ExtResource("1_j27vj")]
+
+[node name="Sprite2D" parent="." index="0" unique_id=1331275016]
+position = Vector2(960.99994, 543.00006)
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("2_w7rrg")
+
+[node name="NavigationRegion2D" parent="." index="1" unique_id=435981806]
+navigation_polygon = SubResource("NavigationPolygon_rgy3k")
+
+[node name="Stair_3_1" type="Area2D" parent="StairConnectors" parent_id_path=PackedInt32Array(1737691285) index="0" unique_id=1943546838]
+script = ExtResource("3_w7rrg")
+destination_floor = 2
+destination_marker_name = "Stair_3_1"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StairConnectors/Stair_3_1" index="0" unique_id=1138101672]
+position = Vector2(897.75, 429.5)
+shape = SubResource("RectangleShape2D_rgy3k")
+
+[node name="Stair_3_2" type="Area2D" parent="StairConnectors" parent_id_path=PackedInt32Array(1737691285) index="1" unique_id=781217941]
+script = ExtResource("3_w7rrg")
+destination_floor = 2
+destination_marker_name = "Stair_3_2"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StairConnectors/Stair_3_2" index="0" unique_id=1558075]
+position = Vector2(336.875, 477)
+shape = SubResource("RectangleShape2D_w7rrg")
+
+[node name="Stair_3_3" type="Area2D" parent="StairConnectors" parent_id_path=PackedInt32Array(1737691285) index="2" unique_id=1140774247]
+script = ExtResource("3_w7rrg")
+destination_floor = 2
+destination_marker_name = "Stair_3_3"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StairConnectors/Stair_3_3" index="0" unique_id=1855569764]
+position = Vector2(1467, 477.25)
+shape = SubResource("RectangleShape2D_r27x7")
+
+[node name="WP_1" type="Marker2D" parent="WanderPoints" parent_id_path=PackedInt32Array(715812298) index="0" unique_id=1711732559]
+position = Vector2(472, 438)
+
+[node name="WP_2" type="Marker2D" parent="WanderPoints" parent_id_path=PackedInt32Array(715812298) index="1" unique_id=53668774]
+position = Vector2(749, 438)
+
+[node name="WP_3" type="Marker2D" parent="WanderPoints" parent_id_path=PackedInt32Array(715812298) index="2" unique_id=754311721]
+position = Vector2(1024, 438)
+
+[node name="WP_4" type="Marker2D" parent="WanderPoints" parent_id_path=PackedInt32Array(715812298) index="3" unique_id=1028971676]
+position = Vector2(1334, 434)
+
+[node name="Stair_2_4" type="Marker2D" parent="WanderPoints" parent_id_path=PackedInt32Array(715812298) index="4" unique_id=1739497812]
+position = Vector2(337, 506)
+
+[node name="Stair_2_5" type="Marker2D" parent="WanderPoints" parent_id_path=PackedInt32Array(715812298) index="5" unique_id=1951910314]
+position = Vector2(899, 461)
+
+[node name="Stair_2_6" type="Marker2D" parent="WanderPoints" parent_id_path=PackedInt32Array(715812298) index="6" unique_id=893310469]
+position = Vector2(1467, 505)
