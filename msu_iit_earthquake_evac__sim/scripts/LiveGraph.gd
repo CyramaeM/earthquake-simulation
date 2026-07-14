@@ -127,7 +127,7 @@ func _draw() -> void:
 func _draw_frame(font: Font, plot: Rect2, x0: float, x1: float, _y0: float, y1: float) -> void:
 	var grid := Color(1, 1, 1, 0.08 )
 	var axis := Color(1, 1, 1, 0.28 )
-	var txt := Color(0.7, 0.72, 0.76 )
+	var txt := Color(0.7, 0.72, 0.76 ) 
 	# Horizontal gridlines + y labels.
 	var steps := 4
 	for i in range(steps + 1 ):

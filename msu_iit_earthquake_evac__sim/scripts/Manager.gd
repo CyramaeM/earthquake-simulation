@@ -476,19 +476,103 @@ func _retire_remaining_agents() -> void:
 	agents.clear()
 
 
-func _export_logs_to_csv() -> void:
+## Writes three CSV files per run to user://logs/:
+##   evac_log_<ts>.csv        - one row per escaped agent (full per-agent data)
+##   evac_summary_<ts>.csv    - one row of scalar summary metrics
+##   evac_stairs_<ts>.csv     - one row per StairConnector
+func _export_logs_to_csv(stats: Dictionary) -> void:
 	var dir_path := "user://logs"
 	DirAccess.make_dir_recursive_absolute(dir_path)
+	var ts: int = Time.get_unix_time_from_system()
 
-	var file_path := "%s/evac_log_%d.csv" % [dir_path, Time.get_unix_time_from_system()]
-	var file := FileAccess.open(file_path, FileAccess.WRITE)
-	if file == null:
-		push_warning("Manager: could not open log file for writing: %s" % file_path)
-		return
+	# --- 1. Per-agent escape log ---
+	var log_path := "%s/evac_log_%d.csv" % [dir_path, ts]
+	var log_file := FileAccess.open(log_path, FileAccess.WRITE)
+	if log_file == null:
+		push_warning("Manager: could not open log file: %s" % log_path)
+	else:
+		log_file.store_line("agent_id,time_seconds,floor,exit_id,distance,congestion_time_s")
+		for e in escape_log:
+			log_file.store_line("%s,%.3f,%d,%s,%.2f,%.3f" % [
+				e.agent_id, e.time, e.floor,
+				e.get("exit_id", ""),
+				e.get("distance", 0.0),
+				e.get("congestion_time", 0.0),
+			])
+		log_file.close()
+		print("Manager: escape log -> ", log_path)
 
-	file.store_line("agent_id,time_seconds,floor")
-	for entry in escape_log:
-		file.store_line("%s,%s,%s" % [entry.agent_id, entry.time, entry.floor])
-	file.close()
+	# --- 2. Scalar summary ---
+	var summary_path := "%s/evac_summary_%d.csv" % [dir_path, ts]
+	var summary_file := FileAccess.open(summary_path, FileAccess.WRITE)
+	if summary_file == null:
+		push_warning("Manager: could not open summary file: %s" % summary_path)
+	else:
+		summary_file.store_line(
+			"scenario,load,escaped_90pct,clearance_time_s," +
+			"avg_flow_per_s,core_flow_per_s,peak_flow_per_s,peak_mean_ratio," +
+			"first_escape_s,last_escape_s,median_escape_s,escape_stddev_s," +
+			"reaction_mean_s,reaction_stddev_s," +
+			"dist_mean,dist_max,congestion_mean_s"
+		)
+		summary_file.store_line("%.s,%d,%d,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.2f,%.2f,%.3f" % [
+			stats["scenario"],
+			stats["load"],
+			stats["escaped_90pct"],
+			stats["clearance_time"],
+			stats["avg_flow"],
+			stats["core_flow"],
+			stats["peak_flow"],
+			stats["peak_mean_ratio"],
+			stats["first_escape_time"],
+			stats["last_escape_time"],
+			stats["median_escape_time"],
+			stats["escape_time_stddev"],
+			stats["reaction_time_mean"],
+			stats["reaction_time_stddev"],
+			stats["distance_mean"],
+			stats["distance_max"],
+			stats["congestion_time_mean"],
+		])
+		summary_file.close()
+		print("Manager: summary -> ", summary_path)
 
-	print("Manager: evacuation log exported to ", file_path)
+	# --- 3. Per-stair summary ---
+	var stair_path := "%s/evac_stairs_%d.csv" % [dir_path, ts]
+	var stair_file := FileAccess.open(stair_path, FileAccess.WRITE)
+	if stair_file == null:
+		push_warning("Manager: could not open stair file: %s" % stair_path)
+	else:
+		stair_file.store_line(
+			"stair_name,transit_count,peak_queue_length," +
+			"mean_wait_s,max_wait_s,mean_transit_s,base_transit_s,slowdown_factor"
+		)
+		for sname in stair_stats:
+			var s: Dictionary = stair_stats[sname]
+			stair_file.store_line("%s,%d,%d,%.3f,%.3f,%.3f,%.3f,%.3f" % [
+				sname,
+				s.get("transit_count", 0),
+				s.get("peak_queue_length", 0),
+				s.get("mean_wait_time", 0.0),
+				s.get("max_wait_time", 0.0),
+				s.get("mean_transit_time", 0.0),
+				s.get("base_transit_time", 0.0),
+				s.get("slowdown_factor", 1.0),
+			])
+
+		# Also write per-floor and exit-distribution data as trailing sections.
+		stair_file.store_line("")
+		stair_file.store_line("floor,escape_count,clearance_time_s")
+		var ecp: Dictionary = stats.get("escape_count_per_floor", {})
+		var ctp: Dictionary = stats.get("clearance_time_per_floor", {})
+		for fi in ecp:
+			stair_file.store_line("%d,%d,%.3f" % [fi, ecp[fi], ctp.get(fi, 0.0)])
+
+		stair_file.store_line("")
+		stair_file.store_line("exit_id,agent_count")
+		var euc: Dictionary = stats.get("exit_use_counts", {})
+		for eid in euc:
+			stair_file.store_line("%s,%d" % [eid, euc[eid]])
+
+		stair_file.close()
+		print("Manager: stair/floor/exit log -> ", stair_path)

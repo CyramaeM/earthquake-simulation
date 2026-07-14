@@ -32,6 +32,7 @@ texture = ExtResource("2_c4tby")
 
 [node name="NavigationRegion2D" parent="." index="1" unique_id=435981806]
 navigation_polygon = SubResource("NavigationPolygon_l5vnn")
+navigation_layers = 263
 
 [node name="Exit" type="Area2D" parent="Exits" parent_id_path=PackedInt32Array(1814494962) index="0" unique_id=116630903]
 script = ExtResource("3_afxwx")
